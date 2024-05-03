@@ -42,6 +42,31 @@ void mergeSort(std::vector<int>& nums) {
     }
 }
 
+void mergeSortOpenMP(std::vector<int>& nums) {
+    if (nums.size() > 1) {
+        int mid = nums.size() / 2;
+        std::vector<int> left(nums.begin(), nums.begin() + mid);
+        std::vector<int> right(nums.begin() + mid, nums.end());
+
+
+#pragma omp parallel sections
+        {
+#pragma omp section
+            {
+                mergeSort(left);
+            }
+#pragma omp section
+            {
+                mergeSort(right);
+            }
+        }
+
+
+        merge(nums, left, right);
+    }
+}
+
+
 
 void mergeSortMPI(std::vector<int>& nums) {
     int rank, size;
